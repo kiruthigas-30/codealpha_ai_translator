@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Language Translator</title>
+
+<style>
+body{
+    font-family: Arial;
+    background: linear-gradient(120deg,#4facfe,#00f2fe);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.box{
+    background:white;
+    padding:25px;
+    width:420px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 6px 18px rgba(0,0,0,0.2);
+}
+
+textarea{
+    width:100%;
+    height:90px;
+    margin-bottom:10px;
+    padding:10px;
+    border-radius:8px;
+}
+
+select,button{
+    padding:8px;
+    margin:5px;
+    border-radius:6px;
+}
+
+button{
+    background:#4facfe;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0077ff;
+}
+
+#result{
+    margin-top:15px;
+    padding:10px;
+    background:#f1f1f1;
+    border-radius:8px;
+    min-height:50px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>🌍 Language Translator</h2>
+
+<textarea id="text" placeholder="Enter text"></textarea>
+
+<br>
+
+<select id="from">
+<option value="en">English</option>
+<option value="ta">Tamil</option>
+<option value="hi">Hindi</option>
+<option value="ml">Malayalam</option>
+<option value="fr">French</option>
+</select>
+
+➡️
+
+<select id="to">
+<option value="ta">Tamil</option>
+<option value="en">English</option>
+<option value="hi">Hindi</option>
+<option value="ml">Malayalam</option>
+<option value="fr">French</option>
+</select>
+
+<br>
+
+<button onclick="translateText()">Translate</button>
+<button onclick="copyText()">Copy</button>
+
+<div id="result">Translation appears here...</div>
+
+</div>
+
+<script>
+
+async function translateText(){
+
+let text = document.getElementById("text").value;
+let from = document.getElementById("from").value;
+let to = document.getElementById("to").value;
+
+if(text === ""){
+    alert("Please enter text");
+    return;
+}
+
+try{
+
+let url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
+
+let response = await fetch(url);
+let data = await response.json();
+
+document.getElementById("result").innerText =
+data.responseData.translatedText;
+
+}
+catch(error){
+document.getElementById("result").innerText =
+"Error: Translation not working. Check internet.";
+}
+
+}
+
+function copyText(){
+
+let translated =
+document.getElementById("result").innerText;
+
+navigator.clipboard.writeText(translated);
+
+alert("Copied!");
+}
+
+</script>
+
+</body>
+</html>
